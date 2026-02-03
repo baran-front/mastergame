@@ -1,0 +1,166 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@font-face {
+  font-family: "yekan-bakh";
+  font-display: swap;
+  src: url("/fonts/yekan-bakh/yekan-bakh.ttf");
+}
+
+@font-face {
+  font-family: "yekan-bakh-bold";
+  font-display: swap;
+  src: url("/fonts/yekan-bakh/yekan-bakh-bold.ttf");
+}
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-secondary: var(--secondary);
+  --color-primary: var(--primary);
+  --radius-sm: calc(var(--radius) - 0.5rem);
+  --radius-md: calc(var(--radius) - 0.25rem);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 0.5rem);
+  --radius-2xl: calc(var(--radius) + 1rem);
+
+  --font-*: initial;
+  --font-yekan-bakh: "yekan-bakh";
+  --font-yekan-bakh-bold: "yekan-bakh-bold";
+}
+
+:root {
+  --radius: 1rem;
+  /* Theme colors are dynamically injected from tenant config via ThemeVariables component */
+}
+
+.dark {
+  /* Theme colors are dynamically injected from tenant config via ThemeVariables component */
+}
+
+@layer base {
+  * {
+    @apply border-foreground/10 outline-foreground/50;
+  }
+
+  body {
+    @apply bg-background text-foreground font-yekan-bakh;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+}
+
+@utility wrapper {
+  @apply w-full px-6 lg:px-8 max-w-384 mx-auto;
+}
+
+@utility heading {
+  @apply font-yekan-bakh-bold text-xl lg:text-3xl leading-normal!;
+}
+
+@utility title {
+  @apply font-yekan-bakh-bold text-lg lg:text-xl;
+}
+
+@utility typhography {
+  @apply lg:text-lg leading-loose lg:leading-loose;
+}
+
+
+@utility unstyled-card {
+  @apply rounded-2xl p-3 space-y-3;
+}
+
+@utility card {
+  @apply unstyled-card bg-card;
+}
+
+@utility card-hover {
+  @apply border border-transparent transition-all hover:border-primary shadow-lg shadow-transparent hover:shadow-primary/10;
+}
+
+@utility card-thumbnail {
+  @apply w-full aspect-video overflow-hidden;
+
+  border-radius: calc(var(--radius-2xl) - 0.75rem);
+}
+
+@utility card-flex-wrapper {
+  @apply flex items-center gap-3 lg:flex-wrap max-lg:overflow-x-auto max-lg:pb-3;
+
+  .card,
+  .custom-card-size {
+    @apply max-sm:min-w-[calc(90%-0.75rem)] max-lg:min-w-[calc((90%-1.5rem)/2)] max-lg:max-w-[calc(90%-0.75rem)] lg:w-[calc((100%-2.25rem)/4)];
+  }
+}
+
+@utility card-grid-wrapper {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3;
+}
+
+@utility cms {
+  & :where(h1, h2, h3, h4, h5, h6) {
+    @apply font-yekan-bakh-bold;
+  }
+
+  h6 {
+    @apply not-first:mt-16 title;
+  }
+
+  p {
+    @apply not-first:mt-3 typhography;
+  }
+
+  a {
+    @apply text-primary underline underline-offset-2 hover:opacity-80;
+  }
+
+  strong {
+    @apply font-yekan-bakh-bold;
+  }
+
+  ul {
+    @apply not-first:mt-6 typhography;
+
+    li {
+      @apply list-disc list-inside not-first:mt-3;
+
+      h6 {
+        @apply inline-block;
+      }
+    }
+  }
+
+  ol {
+    @apply not-first:mt-6 typhography;
+
+    li {
+      @apply list-decimal list-inside not-first:mt-3 not-has-[h6]:font-yekan-bakh-bold has-[h6]:not-first:mt-6;
+
+      h6 {
+        @apply inline-block;
+      }
+    }
+
+    ul {
+      @apply mt-0!;
+
+      li {
+        @apply list-disc;
+      }
+    }
+  }
+}
+
+/* Radial glow background for the moving blob */
+.glow-blob-bg-gradient-radial {
+  background: radial-gradient(160px 160px at center,
+      var(--glow-color, var(--color-primary)) 0%,
+      color-mix(in oklch, var(--glow-color, var(--color-primary)), transparent 50%) 25%,
+      transparent 100%);
+}

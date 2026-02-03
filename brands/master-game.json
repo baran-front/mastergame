@@ -1,0 +1,28 @@
+{
+  "name": "مستر گیم",
+  "apiUrl": "https://api.metadatads.com/api",
+  "apiHostname": "api.metadatads.com",
+  "apiBaseUrl": "https://api.metadatads.com",
+  "apiTenant": "mastergame",
+  "apiToken": "",
+  "logoImg": {
+    "light": "/brands/master-game/logo.png",
+    "dark": "/brands/master-game/logo.png"
+  },
+  "theme": {
+    "light": {
+      "background": "#f2f2f3",
+      "foreground": "#393c3e",
+      "card": "#ffffff",
+      "primary": "#a030bf",
+      "secondary": "#00b4f2"
+    },
+    "dark": {
+      "background": "#1e1e1e",
+      "foreground": "#ffffff",
+      "card": "#2b2b2b",
+      "primary": "#a030bf",
+      "secondary": "#00b4f2"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "بخشی ریموت",
+  "apiUrl": "https://api.metadatads.com/api",
+  "apiHostname": "api.metadatads.com",
+  "apiBaseUrl": "https://api.metadatads.com",
+  "apiTenant": "shetab",
+  "apiToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImFjNzk0NGUyLWY5N2ItNGEzNS04ODcyLWFlYWY1ZmM2Y2M1OCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQHNoZXRhYi5jb20iLCJmdWxsTmFtZSI6InNoZXRhYkFkbWluIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6ImFkbWluQHNoZXRhYi5jb20iLCJpcEFkZHJlc3MiOiIxNTEuMjM4LjE3Ni4xNCIsInRlbmFudCI6InNoZXRhYiIsInJvbGVzIjoiW1wiQWRtaW5cIl0iLCJjaWQiOiIwIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiIiLCJleHAiOjE3NjQxNTc4MTZ9.clmzaQ5xhZ7wvCTRITbWgiVwSgc3lB_ECFxape1sAdU",
+  "logoImg": "/brands/bakhshi-remote/logo.png",
+  "theme": {
+    "light": {
+      "background": "#FFFFFF",
+      "foreground": "#231F20",
+      "card": "#efefef",
+      "primary": "#ff8282",
+      "secondary": "#ffb282"
+    },
+    "dark": {
+      "background": "#231F20",
+      "foreground": "#FFFFFF",
+      "card": "#302b2c",
+      "primary": "#AF0C0F",
+      "secondary": "#ff7219"
+    }
+  }
+}
