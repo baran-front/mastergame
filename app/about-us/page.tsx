@@ -91,7 +91,7 @@ function AboutUsPage() {
       </div>
 
       <div className="wrapper mt-24 lg:mt-40">
-        <h2 className="heading max-lg:text-center">چهارچوب ارزش‌های ویرالرن</h2>
+        <h2 className="heading max-lg:text-center">چهارچوب ارزش‌های مسترگیم</h2>
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Image
             width={616}

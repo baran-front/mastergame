@@ -13,22 +13,6 @@ function formatPhoneNumber(phone: string | null | undefined): string {
   return `+98${cleaned}`;
 }
 
-function formatDate(date: string | null | undefined): string {
-  if (!date) return "-";
-  try {
-    const d = new Date(date);
-    // Convert to Persian date format (simple conversion)
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    // Convert to Persian calendar (approximate)
-    const persianYear = year - 621;
-    return `${persianYear}/${month}/${day}`;
-  } catch {
-    return date;
-  }
-}
-
 async function DashboardProfilePage() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value || "";
@@ -102,7 +86,7 @@ async function DashboardProfilePage() {
           </div>
           <div className="col-span-12 md:col-span-3 opacity-50">تاریخ تولد</div>
           <div className="col-span-12 md:col-span-3">
-            {formatDate(user?.birthdate)}
+            {new Date(user?.birthdate || "").toLocaleDateString("fa")}
           </div>
         </div>
 
@@ -150,17 +134,6 @@ async function DashboardProfilePage() {
           <div className="col-span-12 md:col-span-3">
             {addressData.address || "-"}
           </div>
-        </div>
-
-        <div className="flex items-center gap-3 my-12">
-          <p className="text-xs opacity-50">اطلاعات بانکی</p>
-          <div className="flex-1 border-y"></div>
-        </div>
-        <div className="grid grid-cols-12 gap-3">
-          <div className="col-span-12 md:col-span-2 opacity-50">شماره کارت</div>
-          <div className="col-span-12 md:col-span-4">-</div>
-          <div className="col-span-12 md:col-span-2 opacity-50">شبا</div>
-          <div className="col-span-12 md:col-span-4">{user?.sheba || "-"}</div>
         </div>
 
         <div className="flex items-center justify-end mt-12 max-lg:sticky max-lg:bottom-3">

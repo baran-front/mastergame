@@ -21,11 +21,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import {
   ChevronLeftIcon,
   CircleCheckIcon,
   ImagePlusIcon,
   XIcon,
+  CalendarDaysIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { getMe, editProfile, fileUploader } from "@/lib/fetchs";
@@ -39,8 +42,10 @@ const profileFormSchema = z.object({
     .string()
     .min(10, "کد ملی باید حداقل ۱۰ رقم باشد")
     .max(10, "کد ملی باید ۱۰ رقم باشد"),
-  gender: z.enum(["male", "female", ""]).optional(),
-  birthdate: z.string().optional(),
+  gender: z.enum(["male", "female"], {
+    errorMap: () => ({ message: "انتخاب جنسیت الزامی است" }),
+  }),
+  birthdate: z.string().min(1, "تاریخ تولد الزامی است"),
   mobile: z.string().min(1, "شماره موبایل الزامی است"),
   phone: z.string().optional(),
   email: z.string().email("ایمیل معتبر نیست").min(1, "ایمیل الزامی است"),
@@ -110,14 +115,14 @@ function DashboardEditProfilePage() {
   // Map gender from API (number or string) to form value (string)
   const getGenderValue = (
     gender: string | number | null | undefined
-  ): "" | "male" | "female" => {
-    if (gender === null || gender === undefined) return "";
+  ): "male" | "female" | undefined => {
+    if (gender === null || gender === undefined) return undefined;
 
     // Handle numeric values first (1 = male, 2 = female)
     if (typeof gender === "number") {
       if (gender === 1) return "male";
       if (gender === 2) return "female";
-      return "";
+      return undefined;
     }
 
     // Handle string values
@@ -131,7 +136,7 @@ function DashboardEditProfilePage() {
       return "female";
     }
 
-    return "";
+    return undefined;
   };
 
   const {
@@ -147,7 +152,6 @@ function DashboardEditProfilePage() {
       firstName: "",
       lastName: "",
       nationalCode: "",
-      gender: "",
       birthdate: "",
       mobile: "",
       phone: "",
@@ -167,11 +171,12 @@ function DashboardEditProfilePage() {
   // Set default values when user data is loaded
   useEffect(() => {
     if (user) {
+      const genderValue = getGenderValue(user.gender);
+
       reset({
         firstName: user.firstName || "",
         lastName: user.lastName || "",
         nationalCode: user.codeMeli || "",
-        gender: getGenderValue(user.gender || ""),
         birthdate: formatDateForInput(user.birthdate),
         mobile: user.phoneNumber || "",
         phone: "",
@@ -185,6 +190,7 @@ function DashboardEditProfilePage() {
         unit: addressData.unit || "",
         cardNumber: "",
         shabaNumber: user.sheba || "",
+        ...(genderValue ? { gender: genderValue } : {}),
       });
 
       // Set preview image - use requestAnimationFrame to avoid cascading renders
@@ -488,7 +494,9 @@ function DashboardEditProfilePage() {
             )}
           </div>
           <div className="col-span-12 md:col-span-4">
-            <label htmlFor="gender">جنسیت</label>
+            <label htmlFor="gender">
+              جنسیت <span className="text-red-500">*</span>
+            </label>
             <Controller
               control={control}
               name="gender"
@@ -511,13 +519,56 @@ function DashboardEditProfilePage() {
             )}
           </div>
           <div className="col-span-12 md:col-span-4">
-            <label htmlFor="birthdate">تاریخ تولد</label>
-            <Input
-              className="mt-1.5"
-              id="birthdate"
-              type="date"
-              placeholder="تاریخ تولد"
-              {...register("birthdate")}
+            <label htmlFor="birthdate">
+              تاریخ تولد <span className="text-red-500">*</span>
+            </label>
+            <Controller
+              control={control}
+              name="birthdate"
+              render={({ field }) => {
+                const selectedDate = field.value ? new Date(field.value) : undefined;
+
+                const formatDateLabel = (value: string | undefined) => {
+                  if (!value) return "تاریخ تولد";
+                  try {
+                    const date = new Date(value);
+                    return date.toLocaleDateString("fa-IR");
+                  } catch {
+                    return value;
+                  }
+                };
+
+                return (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="mt-1.5 w-full justify-between"
+                      >
+                        <span>{formatDateLabel(field.value)}</span>
+                        <CalendarDaysIcon className="size-4 opacity-70" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={(date) => {
+                          if (!date) {
+                            field.onChange("");
+                            return;
+                          }
+                          const year = date.getFullYear();
+                          const month = String(date.getMonth() + 1).padStart(2, "0");
+                          const day = String(date.getDate()).padStart(2, "0");
+                          field.onChange(`${year}-${month}-${day}`);
+                        }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                );
+              }}
             />
             {errors.birthdate && (
               <p className="text-red-500 text-sm mt-1">
@@ -546,20 +597,6 @@ function DashboardEditProfilePage() {
             {errors.mobile && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.mobile.message}
-              </p>
-            )}
-          </div>
-          <div className="col-span-12 md:col-span-4">
-            <label htmlFor="phone">شماره ثابت</label>
-            <Input
-              className="mt-1.5"
-              id="phone"
-              placeholder="شماره ثابت"
-              {...register("phone")}
-            />
-            {errors.phone && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.phone.message}
               </p>
             )}
           </div>
@@ -706,42 +743,6 @@ function DashboardEditProfilePage() {
             />
             {errors.unit && (
               <p className="text-red-500 text-sm mt-1">{errors.unit.message}</p>
-            )}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3 my-6">
-          <p className="text-xs opacity-50">اطلاعات بانکی</p>
-          <Separator className="flex-1" />
-        </div>
-
-        <div className="grid grid-cols-12 gap-3">
-          <div className="col-span-12 md:col-span-6">
-            <label htmlFor="cardNumber">شماره کارت</label>
-            <Input
-              className="mt-1.5"
-              id="cardNumber"
-              placeholder="شماره کارت"
-              {...register("cardNumber")}
-            />
-            {errors.cardNumber && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.cardNumber.message}
-              </p>
-            )}
-          </div>
-          <div className="col-span-12 md:col-span-6">
-            <label htmlFor="shabaNumber">شماره شبا</label>
-            <Input
-              className="mt-1.5"
-              id="shabaNumber"
-              placeholder="شماره شبا"
-              {...register("shabaNumber")}
-            />
-            {errors.shabaNumber && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.shabaNumber.message}
-              </p>
             )}
           </div>
         </div>
